@@ -1,0 +1,14 @@
+/*
+ * Theme tokens. d4-site-builder rewrites this file when a theme preset is
+ * chosen in the build config. Values are space-separated RGB channels,
+ * consumed by tailwind.config.ts as rgb(var(--token) / alpha).
+ */
+:root {
+  --accent: 15 118 110;        /* teal 700 */
+  --accent-strong: 17 94 89;   /* teal 800 */
+  --bg-base: 248 250 252;      /* slate 50 */
+  --bg-surface: 255 255 255;
+  --text-heading: 15 23 42;    /* slate 900 */
+  --text-body: 51 65 85;       /* slate 700 */
+  --text-muted: 100 116 139;   /* slate 500 */
+}
