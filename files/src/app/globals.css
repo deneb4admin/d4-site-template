@@ -32,3 +32,66 @@ h3 {
   outline: 2px solid rgb(var(--accent) / 0.65);
   outline-offset: 2px;
 }
+
+@layer components {
+  /* Shared CTA styles used by the shell (header, mega panel, quote modal,
+     product cards). Pages may keep using inline utilities. */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-strong;
+  }
+  .btn-outline {
+    @apply inline-flex items-center gap-2 rounded-md border border-heading/15 px-5 py-2.5 text-sm font-medium text-heading transition-colors hover:border-accent hover:text-accent;
+  }
+}
+
+/* ── Logo marquee (LogoMarquee.tsx) ─────────────────────────────────── */
+.d4-marquee {
+  overflow: hidden;
+}
+.d4-marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: d4-marquee 45s linear infinite;
+}
+.d4-marquee:hover .d4-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .d4-marquee-track {
+    animation: none;
+  }
+}
+@keyframes d4-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Image loading shimmer (ProductImage.tsx) ───────────────────────── */
+.d4-skeleton {
+  background: linear-gradient(
+    100deg,
+    rgb(var(--text-muted) / 0.08) 40%,
+    rgb(var(--text-muted) / 0.18) 50%,
+    rgb(var(--text-muted) / 0.08) 60%
+  );
+  background-size: 200% 100%;
+  animation: d4-shimmer 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .d4-skeleton {
+    animation: none;
+  }
+}
+@keyframes d4-shimmer {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -30% 0;
+  }
+}

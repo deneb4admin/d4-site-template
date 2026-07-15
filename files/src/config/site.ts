@@ -1,4 +1,4 @@
-import type { NavItem } from "@/types";
+import type { Announcement, NavItem, QuoteConfig, SocialLink } from "@/types";
 
 /**
  * Site identity. d4-site-builder rewrites the values in this file from the
@@ -14,7 +14,10 @@ export const siteConfig = {
   address: "",
 };
 
-/** Base navigation. Module nav entries are appended after these. */
+/**
+ * Base navigation. Module nav entries are appended after these. Items with
+ * children render as mega-menu groups; flat items as plain links.
+ */
 export const baseNav: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -22,3 +25,12 @@ export const baseNav: NavItem[] = [
 
 /** Nav entries pinned to the end (after module entries). */
 export const tailNav: NavItem[] = [{ label: "Contact", href: "/contact" }];
+
+/** Optional announcement bar above the header; null = hidden. */
+export const announcement: Announcement | null = null;
+
+/** Quote-request modal; when disabled, quote CTAs link to /contact instead. */
+export const quoteConfig: QuoteConfig = { enabled: true, topics: [] };
+
+/** Social profiles shown in the footer; empty = hidden. */
+export const socialLinks: SocialLink[] = [];

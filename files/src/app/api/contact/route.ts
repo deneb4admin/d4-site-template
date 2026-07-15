@@ -7,6 +7,10 @@ interface ContactMessage {
   name: string;
   email: string;
   message: string;
+  /** Optional extras sent by the quote modal. */
+  company?: string;
+  phone?: string;
+  topic?: string;
   receivedAt: string;
 }
 
@@ -60,12 +64,18 @@ export async function POST(req: Request) {
   const name = (body.name ?? "").toString().trim().slice(0, 200);
   const email = (body.email ?? "").toString().trim().slice(0, 200);
   const message = (body.message ?? "").toString().trim().slice(0, 5000);
+  const company = (body.company ?? "").toString().trim().slice(0, 200);
+  const phone = (body.phone ?? "").toString().trim().slice(0, 50);
+  const topic = (body.topic ?? "").toString().trim().slice(0, 200);
 
   if (!name || !email || !message) {
     return NextResponse.json({ error: "All fields are required." }, { status: 400 });
   }
 
   const msg: ContactMessage = { name, email, message, receivedAt: new Date().toISOString() };
+  if (company) msg.company = company;
+  if (phone) msg.phone = phone;
+  if (topic) msg.topic = topic;
 
   // Always store (feeds the admin Inbox); email delivery is in addition,
   // best-effort. Fail only when neither channel accepted the message.
@@ -88,8 +98,17 @@ export async function POST(req: Request) {
         from: "Website Contact <onboarding@resend.dev>",
         to,
         replyTo: email,
-        subject: `Website inquiry from ${name}`,
-        text: `${message}\n\nFrom: ${name} <${email}>`,
+        subject: topic ? `Website inquiry (${topic}) from ${name}` : `Website inquiry from ${name}`,
+        text: [
+          message,
+          "",
+          `From: ${name} <${email}>`,
+          company && `Company: ${company}`,
+          phone && `Phone: ${phone}`,
+          topic && `Topic: ${topic}`,
+        ]
+          .filter(Boolean)
+          .join("\n"),
       });
       emailed = true;
     } catch (e) {

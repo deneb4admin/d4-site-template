@@ -26,7 +26,7 @@ export default function AboutPage() {
         <p className="font-medium text-heading">Want to work with us?</p>
         <Link
           href="/contact"
-          className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-strong"
+          className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-strong"
         >
           Get in touch
         </Link>
