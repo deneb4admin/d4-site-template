@@ -19,13 +19,15 @@ export default function Header() {
           {siteConfig.name}
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden h-16 items-center gap-6 md:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm transition-colors hover:text-accent ${
-                pathname === item.href ? "font-medium text-accent" : "text-body"
+              className={`flex h-full items-center border-b-2 text-sm transition-colors hover:text-accent ${
+                pathname === item.href
+                  ? "border-accent font-medium text-accent"
+                  : "border-transparent text-body"
               }`}
             >
               {item.label}

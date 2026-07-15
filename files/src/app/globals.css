@@ -17,3 +17,18 @@ h4 {
   @apply text-heading;
   font-family: var(--font-display), var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.18);
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent) / 0.65);
+  outline-offset: 2px;
+}
