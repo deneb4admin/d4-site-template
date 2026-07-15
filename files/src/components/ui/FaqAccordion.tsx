@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import type { FaqItem } from "@/types";
 
-export interface FaqItem {
-  q: string;
-  a: string;
-}
+export type { FaqItem };
 
 /** Accessible single-open FAQ accordion. Pages pass their own items. */
 export default function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {

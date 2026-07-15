@@ -1,4 +1,4 @@
-import type { Announcement, NavItem, QuoteConfig, SocialLink } from "@/types";
+import type { Announcement, FaqItem, LogoWall, NavItem, QuoteConfig, SocialLink } from "@/types";
 
 /**
  * Site identity. d4-site-builder rewrites the values in this file from the
@@ -34,3 +34,9 @@ export const quoteConfig: QuoteConfig = { enabled: true, topics: [] };
 
 /** Social profiles shown in the footer; empty = hidden. */
 export const socialLinks: SocialLink[] = [];
+
+/** FAQ entries for the home page; empty = section hidden. */
+export const faq: FaqItem[] = [];
+
+/** Client/partner logo strip on the home page; empty items = hidden. */
+export const logoWall: LogoWall = { items: [] };

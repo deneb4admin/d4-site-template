@@ -1,13 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-export interface MarqueeItem {
-  name: string;
-  /** Logo image path (e.g. an /uploads or /images asset). Text-only when omitted. */
-  src?: string;
-  /** Small caption under the logo. */
-  subtitle?: string;
-  /** Visual size of the logo; some marks need more height to read. */
-  size?: "sm" | "md" | "lg";
-}
+import type { MarqueeItem } from "@/types";
+
+export type { MarqueeItem };
 
 const HEIGHTS = { sm: "h-9", md: "h-14", lg: "h-20" } as const;
 

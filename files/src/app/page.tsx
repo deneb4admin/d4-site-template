@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { siteConfig } from "@/config/site";
+import { siteConfig, faq, logoWall } from "@/config/site";
+import FaqAccordion from "@/components/ui/FaqAccordion";
+import LogoMarquee from "@/components/ui/LogoMarquee";
 
 export default function HomePage() {
   return (
@@ -47,6 +49,10 @@ export default function HomePage() {
         </div>
       </section>
 
+      {logoWall.items.length > 0 && (
+        <LogoMarquee title={logoWall.title} items={logoWall.items} />
+      )}
+
       <section className="border-t border-heading/10 bg-surface">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
           <div className="grid gap-6 sm:grid-cols-3">
@@ -76,6 +82,23 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {faq.length > 0 && (
+        <section className="border-t border-heading/10">
+          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+            <p className="flex items-center gap-3 text-sm font-medium uppercase tracking-widest text-accent">
+              <span aria-hidden className="h-px w-8 bg-accent" />
+              Common questions
+            </p>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Answers before you ask
+            </h2>
+            <div className="mt-8">
+              <FaqAccordion faqs={faq} />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="border-t border-heading/10 bg-accent/5">
         <div className="mx-auto max-w-6xl px-4 py-20 text-center sm:px-6">

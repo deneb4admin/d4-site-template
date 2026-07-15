@@ -35,3 +35,27 @@ export interface SocialLink {
   label: string;
   href: string;
 }
+
+/** One FAQ entry; a non-empty list renders the home page's FAQ section. */
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+/** One logo-marquee entry. Text-only when src is omitted. */
+export interface MarqueeItem {
+  name: string;
+  /** Logo image path (e.g. an /uploads or /images asset). */
+  src?: string;
+  /** Small caption under the logo. */
+  subtitle?: string;
+  /** Visual size; some marks need more height to read. */
+  size?: "sm" | "md" | "lg";
+}
+
+/** Config for the home page's logo strip; empty items = hidden. */
+export interface LogoWall {
+  /** Strip heading; defaults to "Trusted by". */
+  title?: string;
+  items: MarqueeItem[];
+}
