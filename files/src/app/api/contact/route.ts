@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { createClient } from "@libsql/client";
+import { existsSync, mkdirSync } from "fs";
 import path from "path";
 
 interface ContactMessage {
@@ -9,15 +10,43 @@ interface ContactMessage {
   receivedAt: string;
 }
 
-function storeLocally(msg: ContactMessage) {
+// Self-contained libSQL client: this template has no hard dependency on
+// d4-cms-core, so it can't assume @/lib/cms/data-store exists. Same
+// Turso-in-production / local-file-in-dev behavior, same env vars.
+function localDbUrl(): string {
   const dir = path.join(process.cwd(), "data");
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  const fp = path.join(dir, "messages.json");
-  const existing: ContactMessage[] = existsSync(fp)
-    ? JSON.parse(readFileSync(fp, "utf8"))
-    : [];
+  return `file:${path.join(dir, "cms.db")}`;
+}
+
+const client = createClient(
+  process.env.TURSO_DATABASE_URL
+    ? { url: process.env.TURSO_DATABASE_URL, authToken: process.env.TURSO_AUTH_TOKEN }
+    : { url: localDbUrl() }
+);
+
+let ready: Promise<unknown> | null = null;
+function ensureTable() {
+  if (!ready) {
+    ready = client.execute(
+      "CREATE TABLE IF NOT EXISTS collections (name TEXT PRIMARY KEY, data TEXT NOT NULL)"
+    );
+  }
+  return ready;
+}
+
+async function storeLocally(msg: ContactMessage) {
+  await ensureTable();
+  const res = await client.execute({
+    sql: "SELECT data FROM collections WHERE name = ?",
+    args: ["messages"],
+  });
+  const existing: ContactMessage[] = res.rows[0] ? JSON.parse(res.rows[0].data as string) : [];
   existing.push(msg);
-  writeFileSync(fp, JSON.stringify(existing, null, 2), "utf8");
+  await client.execute({
+    sql: "INSERT INTO collections (name, data) VALUES (?, ?) ON CONFLICT(name) DO UPDATE SET data = excluded.data",
+    args: ["messages", JSON.stringify(existing)],
+  });
 }
 
 export async function POST(req: Request) {
@@ -55,14 +84,14 @@ export async function POST(req: Request) {
     } catch (e) {
       console.error("contact email failed, storing locally:", e);
       try {
-        storeLocally(msg);
+        await storeLocally(msg);
       } catch {
         return NextResponse.json({ error: "Could not deliver message." }, { status: 500 });
       }
     }
   } else {
     try {
-      storeLocally(msg);
+      await storeLocally(msg);
     } catch (e) {
       console.error("contact local store failed:", e);
       return NextResponse.json({ error: "Could not deliver message." }, { status: 500 });
