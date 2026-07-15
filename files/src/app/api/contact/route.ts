@@ -67,9 +67,19 @@ export async function POST(req: Request) {
 
   const msg: ContactMessage = { name, email, message, receivedAt: new Date().toISOString() };
 
+  // Always store (feeds the admin Inbox); email delivery is in addition,
+  // best-effort. Fail only when neither channel accepted the message.
+  let stored = true;
+  try {
+    await storeLocally(msg);
+  } catch (e) {
+    stored = false;
+    console.error("contact store failed:", e);
+  }
+
+  let emailed = false;
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL;
-
   if (apiKey && to) {
     try {
       const { Resend } = await import("resend");
@@ -81,22 +91,14 @@ export async function POST(req: Request) {
         subject: `Website inquiry from ${name}`,
         text: `${message}\n\nFrom: ${name} <${email}>`,
       });
+      emailed = true;
     } catch (e) {
-      console.error("contact email failed, storing locally:", e);
-      try {
-        await storeLocally(msg);
-      } catch {
-        return NextResponse.json({ error: "Could not deliver message." }, { status: 500 });
-      }
-    }
-  } else {
-    try {
-      await storeLocally(msg);
-    } catch (e) {
-      console.error("contact local store failed:", e);
-      return NextResponse.json({ error: "Could not deliver message." }, { status: 500 });
+      console.error("contact email failed:", e);
     }
   }
 
+  if (!stored && !emailed) {
+    return NextResponse.json({ error: "Could not deliver message." }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
