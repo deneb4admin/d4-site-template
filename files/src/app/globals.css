@@ -1,4 +1,5 @@
 @import "./theme.css";
+@import "./motion.css";
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +7,7 @@
 
 body {
   @apply bg-base text-body antialiased;
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
 h1,
@@ -13,4 +15,5 @@ h2,
 h3,
 h4 {
   @apply text-heading;
+  font-family: var(--font-display), var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }

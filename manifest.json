@@ -42,8 +42,10 @@
   "postAssemble": {
     "generatedFiles": [
       "src/config/nav.generated.ts",
-      "src/config/admin-panels.generated.tsx"
+      "src/config/admin-panels.generated.tsx",
+      "src/config/fonts.generated.ts",
+      "src/config/design.generated.ts"
     ],
-    "notes": "The builder rewrites src/config/nav.generated.ts with nav entries from every selected module, rewrites src/config/site.ts values from the build config, and rewrites src/app/theme.css when a theme preset is chosen."
+    "notes": "The builder rewrites src/config/nav.generated.ts with nav entries from every selected module, rewrites src/config/site.ts values from the build config, rewrites src/app/theme.css when a theme/preset/pairing supplies one, and rewrites src/config/fonts.generated.ts + src/config/design.generated.ts (font pairing + motion signature) when the build config names a pairing from d4-site-builder's pairings.json. The checked-in defaults for both are the modern-signal pairing so the template runs standalone."
   }
 }
